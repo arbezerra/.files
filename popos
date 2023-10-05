@@ -1,6 +1,6 @@
-#!/usr/bin/env zsh
+#!/usr/bin/env bash
 if [[ -z $STOW_FOLDERS ]]; then
-    STOW_FOLDERS="bin,nvim,tmux,zsh"
+    STOW_FOLDERS="bin,nvim,tmux,zsh,git"
 fi
 
 if [[ -z $DOTFILES ]]; then
@@ -8,6 +8,10 @@ if [[ -z $DOTFILES ]]; then
 fi
 
 # Deps
-sudo apt install fzf ripgrep
+sudo apt update
+sudo apt install -y zsh fzf ripgrep stow ninja-build gettext cmake unzip curl tmux
+
+# Change default shell
+sudo usermod --shell /bin/zsh andre
 
 STOW_FOLDERS=$STOW_FOLDERS DOTFILES=$DOTFILES $DOTFILES/install

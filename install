@@ -1,6 +1,37 @@
 #!/usr/bin/env zsh
 # I am using zsh instead of bash.  I was having some troubles using bash with
 # arrays.  Didn't want to investigate, so I just did zsh
+
+# Workspace
+mkdir -p $HOME/{workspace,ufcg,mestrado}
+
+# Install oh-my-zsh
+if [ ! -d ~/.oh-my-zsh ]
+then
+  echo "Install oh my zsh"
+  sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended
+fi
+
+if [ ! -d ~/.oh-my-zsh/custom/themes/powerlevel10k ]
+then
+  echo "Install powerlevel10k"
+  git clone --depth=1 https://github.com/romkatv/powerlevel10k.git ${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/themes/powerlevel10k
+fi
+
+# Build nvim
+if ! command -v nvim &> /dev/null
+then
+  echo "Install nvim"
+  CMAKE_BUILD_TYPE=Release cd $DOTFILES/build/nvim && make && sudo make install
+fi
+
+# Backup zshrc
+if [ ! -L ~/.zshrc ] && [ -f ~/.zshrc ]
+then
+  echo "Backup .zshrc"
+  mv ~/.zshrc ~/.zshrc.bak
+fi
+
 pushd $DOTFILES
 for folder in $(echo $STOW_FOLDERS | sed "s/,/ /g")
 do

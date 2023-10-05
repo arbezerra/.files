@@ -1,0 +1,8 @@
+[init]
+  defaultBranch = main
+[gpg]
+  format = ssh
+[user]
+  signingkey = /home/andre/.ssh/id_rsa
+[commit]
+  gpgsign = true

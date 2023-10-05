@@ -25,6 +25,13 @@ then
   CMAKE_BUILD_TYPE=Release cd $DOTFILES/build/nvim && git checkout stable && make && sudo make install
 fi
 
+# Install packer
+if [ ! -d ~/.local/share/nvim/site/pack/packer/start/packer.nvim ]
+then
+    echo "Install packer"
+    git clone --depth 1 https://github.com/wbthomason/packer.nvim  ~/.local/share/nvim/site/pack/packer/start/packer.nvim
+fi
+
 # Backup zshrc
 if [ ! -L ~/.zshrc ] && [ -f ~/.zshrc ]
 then

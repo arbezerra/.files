@@ -7,4 +7,7 @@ if [[ -z $DOTFILES ]]; then
     DOTFILES=$HOME/.files
 fi
 
+# Deps
+sudo apt install fzf ripgrep
+
 STOW_FOLDERS=$STOW_FOLDERS DOTFILES=$DOTFILES $DOTFILES/install

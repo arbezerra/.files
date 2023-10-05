@@ -22,7 +22,7 @@ fi
 if ! command -v nvim &> /dev/null
 then
   echo "Install nvim"
-  CMAKE_BUILD_TYPE=Release cd $DOTFILES/build/nvim && make && sudo make install
+  CMAKE_BUILD_TYPE=Release cd $DOTFILES/build/nvim && git checkout stable && make && sudo make install
 fi
 
 # Backup zshrc

@@ -9,7 +9,7 @@ fi
 
 # Deps
 sudo apt update
-sudo apt install -y zsh fzf ripgrep stow ninja-build gettext cmake unzip curl tmux
+sudo apt install -y zsh fzf ripgrep stow ninja-build gettext cmake unzip curl tmux golang-go
 
 # Change default shell
 sudo usermod --shell /bin/zsh andre

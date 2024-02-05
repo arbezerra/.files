@@ -6,3 +6,6 @@
   signingkey = /home/andre/.ssh/id_rsa
 [commit]
   gpgsign = true
+[includeIf "gitdir:~/corban/"]
+  path = .gitpdtec
+

@@ -8,4 +8,6 @@
   gpgsign = true
 [includeIf "gitdir:~/corban/"]
   path = .gitpdtec
+[includeIf "gitdir:~/paneas/"]
+  path = .gitpaneas
 

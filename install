@@ -3,7 +3,7 @@
 # arrays.  Didn't want to investigate, so I just did zsh
 
 # Workspace
-mkdir -p $HOME/{workspace,ufcg,mestrado,corban}
+mkdir -p $HOME/{workspace,ufcg,mestrado,corban,paneas}
 
 # Install oh-my-zsh
 if [ ! -d ~/.oh-my-zsh ]

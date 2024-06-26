@@ -21,7 +21,10 @@ fi
 if [ ! -d ~/.asdf ]
 then
     echo "Install asdf"
-    git clone git@github.com:asdf-vm/asdf.git ~/.asdf --branch v0.13.1
+    git clone git@github.com:asdf-vm/asdf.git ~/.asdf --branch v0.14.0
+    asdf plugin add nodejs https://github.com/asdf-vm/asdf-nodejs.git
+    asdf install nodejs latest
+    asdf global nodejs latest
 fi
 
 # Build nvim

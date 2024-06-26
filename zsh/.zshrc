@@ -78,7 +78,7 @@ ZSH_THEME="powerlevel10k/powerlevel10k"
 # Custom plugins may be added to $ZSH_CUSTOM/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
-plugins=(git asdf kubectl ansible docker nmap)
+plugins=(git asdf kubectl ansible docker nmap mvn)
 
 source $ZSH/oh-my-zsh.sh
 
@@ -115,3 +115,7 @@ alias vim="nvim"
 path+=("$HOME/.local/bin")
 
 export PATH
+
+
+# Load Angular CLI autocompletion.
+#source <(ng completion script)

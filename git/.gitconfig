@@ -4,6 +4,8 @@
   format = ssh
 [user]
   signingkey = /home/andre/.ssh/id_rsa
+  name = Andre Landim
+  email = arbezerra@gmail.com
 [commit]
   gpgsign = true
 [includeIf "gitdir:~/corban/"]

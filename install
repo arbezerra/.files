@@ -23,7 +23,12 @@ then
     echo "Install nvm"
     curl https://raw.githubusercontent.com/creationix/nvm/master/install.sh | bash
     source ~/.zshrc
-    nvm install --lts
+fi
+
+if ! command -v node --version &> /dev/null
+then
+  echo "Install node"
+  nvm install --lts
 fi
 
 # Build nvim

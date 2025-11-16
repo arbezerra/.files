@@ -10,7 +10,9 @@ fi
 # Deps
 sudo apt update
 sudo apt dist-upgrade -y
-sudo apt install -y zsh fzf ripgrep fd-find stow ninja-build gettext cmake unzip curl tmux golang-go xclip python3-pip
+sudo apt install -y zsh fzf ripgrep fd-find stow ninja-build gettext cmake \
+    unzip curl tmux golang-go xclip python3-pip apt-transport-https \
+    ca-certificates curl software-properties-common
 
 pip install pipenv poetry
 

@@ -46,6 +46,28 @@ then
   mv ~/.zshrc ~/.zshrc.bak
 fi
 
+if ! command -v yarn --version &> /dev/null
+then
+  echo "Enable yarn"
+  corepack enable yarn
+fi
+
+if ! command -v pnpm --version &> /dev/null
+then
+  echo "Enable pnpm"
+  corepack enable pnpm
+fi
+
+if ! command -v docker &> /dev/null
+then
+  echo "Install docker"
+  curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
+  echo "deb [signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+  sudo apt update
+  sudo apt install -y docker-ce docker-ce-cli containerd.io
+  sudo usermod -aG docker $USER
+fi
+
 pushd $DOTFILES
 for folder in $(echo $STOW_FOLDERS | sed "s/,/ /g")
 do

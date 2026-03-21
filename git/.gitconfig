@@ -3,7 +3,7 @@
 [gpg]
   format = ssh
 [user]
-  signingkey = /home/andre/.ssh/id_rsa
+  signingkey = /home/andre/.ssh/id_ed25519
   name = Andre Landim
   email = arbezerra@gmail.com
 [commit]

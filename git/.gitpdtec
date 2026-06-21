@@ -1,3 +1,5 @@
 [user]
     name = André Landim
-    email = p-andre.landim@pd.tec.br
+    email = prestador-andre.landim@trilliab3.com.br
+    signingkey = /home/andre/.ssh/id_rsa
+

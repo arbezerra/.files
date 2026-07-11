@@ -4,8 +4,6 @@ dotfile_links:
     dest: .local/bin/tmux-sessionizer
   - src: nvim/.config/nvim
     dest: .config/nvim
-  - src: nvim/.config/github-copilot
-    dest: .config/github-copilot
   - src: tmux/.tmux.conf
     dest: .tmux.conf
   - src: zsh/.zshrc

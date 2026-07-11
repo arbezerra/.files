@@ -1,0 +1,128 @@
+---
+- name: Create workspace directories
+  ansible.builtin.file:
+    path: "{{ item }}"
+    state: directory
+    mode: "0755"
+  loop: "{{ workspace_directories }}"
+
+- name: Install oh-my-zsh
+  ansible.builtin.git:
+    repo: https://github.com/ohmyzsh/ohmyzsh.git
+    dest: "{{ dotfiles_home }}/.oh-my-zsh"
+    depth: 1
+    update: false
+
+- name: Install powerlevel10k
+  ansible.builtin.git:
+    repo: "{{ powerlevel10k_repo }}"
+    dest: "{{ dotfiles_home }}/.oh-my-zsh/custom/themes/powerlevel10k"
+    depth: 1
+    update: false
+
+- name: Install nvm
+  ansible.builtin.git:
+    repo: "{{ nvm_repo }}"
+    dest: "{{ dotfiles_home }}/.nvm"
+    version: "{{ nvm_version }}"
+    depth: 1
+    update: false
+
+- name: Check whether Node is installed
+  ansible.builtin.shell:
+    cmd: |
+      set -e
+      export NVM_DIR="{{ dotfiles_home }}/.nvm"
+      [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"
+      command -v node
+    executable: /bin/bash
+  register: node_check
+  changed_when: false
+  failed_when: false
+
+- name: Install latest LTS Node with nvm
+  ansible.builtin.shell:
+    cmd: |
+      set -e
+      export NVM_DIR="{{ dotfiles_home }}/.nvm"
+      . "$NVM_DIR/nvm.sh"
+      nvm install --lts
+      nvm alias default 'lts/*'
+    executable: /bin/bash
+  when: node_check.rc != 0
+
+- name: Check whether Yarn is enabled
+  ansible.builtin.shell:
+    cmd: |
+      set -e
+      export NVM_DIR="{{ dotfiles_home }}/.nvm"
+      [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"
+      command -v yarn
+    executable: /bin/bash
+  register: yarn_check
+  changed_when: false
+  failed_when: false
+
+- name: Enable Yarn with corepack
+  ansible.builtin.shell:
+    cmd: |
+      set -e
+      export NVM_DIR="{{ dotfiles_home }}/.nvm"
+      . "$NVM_DIR/nvm.sh"
+      corepack enable yarn
+    executable: /bin/bash
+  when: yarn_check.rc != 0
+
+- name: Check whether pnpm is enabled
+  ansible.builtin.shell:
+    cmd: |
+      set -e
+      export NVM_DIR="{{ dotfiles_home }}/.nvm"
+      [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"
+      command -v pnpm
+    executable: /bin/bash
+  register: pnpm_check
+  changed_when: false
+  failed_when: false
+
+- name: Enable pnpm with corepack
+  ansible.builtin.shell:
+    cmd: |
+      set -e
+      export NVM_DIR="{{ dotfiles_home }}/.nvm"
+      . "$NVM_DIR/nvm.sh"
+      corepack enable pnpm
+    executable: /bin/bash
+  when: pnpm_check.rc != 0
+
+- name: Check whether Neovim is installed
+  ansible.builtin.command: nvim --version
+  register: nvim_check
+  changed_when: false
+  failed_when: false
+
+- name: Clone Neovim
+  ansible.builtin.git:
+    repo: "{{ neovim_repo }}"
+    dest: "{{ dotfiles_dir }}/build/nvim"
+    version: "{{ neovim_version }}"
+  when: nvim_check.rc != 0
+
+- name: Build Neovim
+  ansible.builtin.command:
+    cmd: make CMAKE_BUILD_TYPE=Release
+    chdir: "{{ dotfiles_dir }}/build/nvim"
+  when: nvim_check.rc != 0
+
+- name: Install Neovim
+  become: true
+  ansible.builtin.command:
+    cmd: make install
+    chdir: "{{ dotfiles_dir }}/build/nvim"
+  when: nvim_check.rc != 0
+
+- name: Set default shell to zsh
+  become: true
+  ansible.builtin.user:
+    name: "{{ dotfiles_user }}"
+    shell: /bin/zsh

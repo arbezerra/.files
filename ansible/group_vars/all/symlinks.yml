@@ -1,0 +1,22 @@
+---
+dotfile_links:
+  - src: bin/.local/bin/tmux-sessionizer
+    dest: .local/bin/tmux-sessionizer
+  - src: nvim/.config/nvim
+    dest: .config/nvim
+  - src: nvim/.config/github-copilot
+    dest: .config/github-copilot
+  - src: tmux/.tmux.conf
+    dest: .tmux.conf
+  - src: zsh/.zshrc
+    dest: .zshrc
+  - src: zsh/.p10k.zsh
+    dest: .p10k.zsh
+  - src: git/.gitconfig
+    dest: .gitconfig
+  - src: git/.gitpaneas
+    dest: .gitpaneas
+  - src: git/.gitpdtec
+    dest: .gitpdtec
+  - src: fonts/.fonts
+    dest: .fonts

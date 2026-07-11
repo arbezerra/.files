@@ -1,0 +1,27 @@
+---
+- name: Install Arch packages
+  become: true
+  ansible.builtin.command:
+    cmd: pacman -S --needed --noconfirm {{ arch_packages | join(' ') }}
+  register: arch_package_install
+  changed_when: "'there is nothing to do' not in arch_package_install.stdout"
+  when: ansible_facts.os_family == "Archlinux"
+
+- name: Update apt cache
+  become: true
+  ansible.builtin.apt:
+    update_cache: true
+    cache_valid_time: 3600
+  when: ansible_facts.os_family == "Debian"
+
+- name: Install Debian packages
+  become: true
+  ansible.builtin.apt:
+    name: "{{ debian_packages }}"
+    state: present
+  when: ansible_facts.os_family == "Debian"
+
+- name: Install Poetry
+  ansible.builtin.shell:
+    cmd: curl -sSL https://install.python-poetry.org | python3 -
+    creates: "{{ dotfiles_home }}/.local/bin/poetry"

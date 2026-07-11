@@ -1,0 +1,48 @@
+---
+- name: Check current zshrc
+  ansible.builtin.stat:
+    path: "{{ dotfiles_home }}/.zshrc"
+  register: zshrc_stat
+
+- name: Backup existing zshrc
+  ansible.builtin.command:
+    cmd: mv "{{ dotfiles_home }}/.zshrc" "{{ dotfiles_home }}/.zshrc.bak"
+    creates: "{{ dotfiles_home }}/.zshrc.bak"
+  when:
+    - zshrc_stat.stat.exists
+    - not zshrc_stat.stat.islnk
+
+- name: Sync git submodule URLs
+  ansible.builtin.command:
+    cmd: git submodule sync --recursive
+    chdir: "{{ dotfiles_dir }}"
+  changed_when: false
+
+- name: Check git submodule state
+  ansible.builtin.command:
+    cmd: git submodule status --recursive
+    chdir: "{{ dotfiles_dir }}"
+  register: git_submodules
+  changed_when: false
+
+- name: Clone git submodules
+  ansible.builtin.command:
+    cmd: git submodule update --init --recursive
+    chdir: "{{ dotfiles_dir }}"
+  when: git_submodules.stdout is search('(^|\n)[-+]')
+
+- name: Create dotfile link parent directories
+  ansible.builtin.file:
+    path: "{{ dotfiles_home }}/{{ item.dest | dirname }}"
+    state: directory
+    mode: "0755"
+  loop: "{{ dotfile_links }}"
+  when: item.dest | dirname != "."
+
+- name: Link dotfiles
+  ansible.builtin.file:
+    src: "{{ dotfiles_dir }}/{{ item.src }}"
+    dest: "{{ dotfiles_home }}/{{ item.dest }}"
+    state: link
+    force: false
+  loop: "{{ dotfile_links }}"

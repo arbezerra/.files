@@ -8,8 +8,8 @@
   email = arbezerra@gmail.com
 [commit]
   gpgsign = true
-[includeIf "gitdir:~/corban/"]
+[includeIf "gitdir:~/workspace/corban/"]
   path = .gitpdtec
-[includeIf "gitdir:~/paneas/"]
+[includeIf "gitdir:~/workspace/paneas/"]
   path = .gitpaneas
 

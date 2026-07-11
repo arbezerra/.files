@@ -1,0 +1,91 @@
+---
+dotfiles_dir: "{{ lookup('env', 'DOTFILES') | default(ansible_facts['env']['HOME'] ~ '/.files', true) }}"
+dotfiles_user: "{{ lookup('env', 'USER') | default(ansible_facts['user_id'], true) }}"
+dotfiles_home: "{{ ansible_facts['env']['HOME'] }}"
+
+workspace_directories:
+  - "{{ dotfiles_home }}/workspace/personal"
+  - "{{ dotfiles_home }}/workspace/ufcg"
+  - "{{ dotfiles_home }}/workspace/mestrado"
+  - "{{ dotfiles_home }}/workspace/corban"
+  - "{{ dotfiles_home }}/workspace/paneas"
+
+arch_packages:
+  - zsh
+  - fzf
+  - ripgrep
+  - fd
+  - ninja
+  - gettext
+  - cmake
+  - unzip
+  - curl
+  - tmux
+  - go
+  - xclip
+  - python-pip
+  - base-devel
+  - git
+
+debian_packages:
+  - zsh
+  - fzf
+  - ripgrep
+  - fd-find
+  - ninja-build
+  - gettext
+  - cmake
+  - unzip
+  - curl
+  - tmux
+  - golang-go
+  - xclip
+  - python3-pip
+  - apt-transport-https
+  - ca-certificates
+  - software-properties-common
+
+arch_docker_packages:
+  - linux
+  - linux-headers
+  - docker
+  - docker-compose
+  - iptables-nft
+  - nftables
+
+debian_docker_packages:
+  - docker-ce
+  - docker-ce-cli
+  - containerd.io
+  - iptables
+  - nftables
+
+docker_kernel_modules:
+  - bridge
+  - overlay
+  - br_netfilter
+  - x_tables
+  - xt_conntrack
+  - ip_tables
+  - iptable_nat
+  - iptable_filter
+  - ip6_tables
+  - ip6table_nat
+  - nf_nat
+  - nf_conntrack
+  - nf_tables
+  - nft_compat
+  - nft_chain_nat
+  - xt_MASQUERADE
+  - xt_addrtype
+
+docker_sysctl_settings:
+  net.bridge.bridge-nf-call-iptables: "1"
+  net.bridge.bridge-nf-call-ip6tables: "1"
+  net.ipv4.ip_forward: "1"
+
+nvm_repo: https://github.com/nvm-sh/nvm.git
+nvm_version: v0.40.3
+neovim_repo: git@github.com:neovim/neovim.git
+neovim_version: stable
+powerlevel10k_repo: https://github.com/romkatv/powerlevel10k.git

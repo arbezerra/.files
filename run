@@ -2,6 +2,10 @@
 set -euo pipefail
 
 DOTFILES="${DOTFILES:-$HOME/.files}"
+AUR_PACKAGES=(
+    anydesk-bin
+    google-chrome
+)
 
 usage() {
     cat <<'EOF'
@@ -35,6 +39,35 @@ bootstrap_ansible() {
     exit 1
 }
 
+post_install() {
+    if [[ ! -r /etc/arch-release ]]; then
+        return
+    fi
+
+    if ((${#AUR_PACKAGES[@]} == 0)); then
+        return
+    fi
+
+    if ! command -v yay > /dev/null 2>&1; then
+        echo "Skipping AUR packages: yay is not installed." >&2
+        return
+    fi
+
+    yay -S --needed --sudoloop --answerclean None --answerdiff None --answeredit None "${AUR_PACKAGES[@]}"
+}
+
+should_run_post_install() {
+    for arg in "$@"; do
+        case "$arg" in
+            --syntax-check|--check|--list-hosts|--list-tasks|--list-tags)
+                return 1
+                ;;
+        esac
+    done
+
+    return 0
+}
+
 if [[ "${1:-}" == "-h" || "${1:-}" == "--help" ]]; then
     usage
     exit 0
@@ -44,3 +77,7 @@ bootstrap_ansible
 
 cd "$DOTFILES/ansible"
 DOTFILES="$DOTFILES" ansible-playbook playbooks/workstation.yml --ask-become-pass "$@"
+
+if should_run_post_install "$@"; then
+    post_install
+fi

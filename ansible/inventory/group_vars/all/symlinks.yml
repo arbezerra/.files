@@ -22,3 +22,5 @@ dotfile_links:
     dest: .config/alacritty
   - src: kitty/.config/kitty
     dest: .config/kitty
+  - src: mpv/.config/mpv
+    dest: .config/mpv

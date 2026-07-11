@@ -14,15 +14,49 @@
   failed_when: false
   when: ansible_facts.os_family == "Archlinux"
 
-- name: Install Arch AUR packages
-  ansible.builtin.command:
-    cmd: yay -S --needed --noconfirm {{ arch_aur_packages | join(' ') }}
-  register: arch_aur_package_install
-  changed_when: "'there is nothing to do' not in arch_aur_package_install.stdout"
+- name: Create yay build directory
+  ansible.builtin.tempfile:
+    state: directory
+    suffix: yay
+  register: yay_build_dir
   when:
     - ansible_facts.os_family == "Archlinux"
-    - yay_check.rc == 0
-    - arch_aur_packages | length > 0
+    - yay_check.rc != 0
+
+- name: Clone yay
+  ansible.builtin.git:
+    repo: "{{ yay_repo }}"
+    dest: "{{ yay_build_dir.path }}/yay"
+    version: master
+  when:
+    - ansible_facts.os_family == "Archlinux"
+    - yay_check.rc != 0
+
+- name: Refresh sudo timestamp for yay install
+  become: true
+  ansible.builtin.command: "true"
+  changed_when: false
+  when:
+    - ansible_facts.os_family == "Archlinux"
+    - yay_check.rc != 0
+
+- name: Install yay
+  ansible.builtin.command:
+    cmd: makepkg -si --noconfirm
+    chdir: "{{ yay_build_dir.path }}/yay"
+    creates: /usr/bin/yay
+  when:
+    - ansible_facts.os_family == "Archlinux"
+    - yay_check.rc != 0
+
+- name: Remove yay build directory
+  ansible.builtin.file:
+    path: "{{ yay_build_dir.path }}"
+    state: absent
+  when:
+    - ansible_facts.os_family == "Archlinux"
+    - yay_check.rc != 0
+    - yay_build_dir.path is defined
 
 - name: Update apt cache
   become: true

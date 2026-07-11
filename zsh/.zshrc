@@ -1,3 +1,28 @@
+# Start ssh-agent and load the Git signing key before p10k instant prompt.
+export SSH_SIGNING_KEY="${SSH_SIGNING_KEY:-$HOME/.ssh/id_ed25519}"
+export SSH_AUTH_SOCK="${SSH_AUTH_SOCK:-${XDG_RUNTIME_DIR:-$HOME/.cache}/ssh-agent.sock}"
+
+if [[ -o interactive && -S "$SSH_AUTH_SOCK" ]]; then
+  ssh-add -l >/dev/null 2>&1
+  if (( $? == 2 )); then
+    rm -f "$SSH_AUTH_SOCK"
+  fi
+fi
+
+if [[ -o interactive && ! -S "$SSH_AUTH_SOCK" ]]; then
+  ssh-agent -a "$SSH_AUTH_SOCK" >/dev/null
+fi
+
+if [[ -o interactive && -f "$SSH_SIGNING_KEY" && -t 0 ]]; then
+  if [[ -r "$SSH_SIGNING_KEY.pub" ]]; then
+    if ! ssh-add -L 2>/dev/null | grep -qxF "$(cat "$SSH_SIGNING_KEY.pub")"; then
+      ssh-add "$SSH_SIGNING_KEY"
+    fi
+  elif ! ssh-add -l >/dev/null 2>&1; then
+    ssh-add "$SSH_SIGNING_KEY"
+  fi
+fi
+
 # Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.zshrc.
 # Initialization code that may require console input (password prompts, [y/n]
 # confirmations, etc.) must go above this block; everything else may go below.

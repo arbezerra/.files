@@ -26,6 +26,7 @@ arch_packages:
   - python-pip
   - base-devel
   - git
+  - tree-sitter-cli
 
 debian_packages:
   - zsh
@@ -44,6 +45,7 @@ debian_packages:
   - apt-transport-https
   - ca-certificates
   - software-properties-common
+  - tree-sitter-cli
 
 arch_docker_packages:
   - linux

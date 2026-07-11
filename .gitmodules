@@ -1,4 +1,4 @@
 [submodule "nvim/.config/nvim"]
 	path = nvim/.config/nvim
-	url = https://github.com/arbezerra/init.lua.git
+	url = git@github.com:arbezerra/init.lua.git
 	branch = master

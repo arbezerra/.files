@@ -12,6 +12,7 @@ workspace_directories:
 
 arch_packages:
   - zsh
+  - bash-completion
   - fzf
   - ripgrep
   - fd
@@ -26,11 +27,20 @@ arch_packages:
   - python-pip
   - base-devel
   - git
+  - firefox
   - qbittorrent
   - tree-sitter-cli
+  - noto-fonts
+  - noto-fonts-cjk
+  - noto-fonts-emoji
+
+arch_aur_packages:
+  - anydesk-bin
+  - google-chrome
 
 debian_packages:
   - zsh
+  - bash-completion
   - fzf
   - ripgrep
   - fd-find
@@ -46,8 +56,12 @@ debian_packages:
   - apt-transport-https
   - ca-certificates
   - software-properties-common
+  - firefox-esr
   - qbittorrent
   - tree-sitter-cli
+  - fonts-noto
+  - fonts-noto-cjk
+  - fonts-noto-color-emoji
 
 arch_docker_packages:
   - linux

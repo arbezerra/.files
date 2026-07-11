@@ -7,6 +7,23 @@
   changed_when: "'there is nothing to do' not in arch_package_install.stdout"
   when: ansible_facts.os_family == "Archlinux"
 
+- name: Check whether yay is installed
+  ansible.builtin.command: yay --version
+  register: yay_check
+  changed_when: false
+  failed_when: false
+  when: ansible_facts.os_family == "Archlinux"
+
+- name: Install Arch AUR packages
+  ansible.builtin.command:
+    cmd: yay -S --needed --noconfirm {{ arch_aur_packages | join(' ') }}
+  register: arch_aur_package_install
+  changed_when: "'there is nothing to do' not in arch_aur_package_install.stdout"
+  when:
+    - ansible_facts.os_family == "Archlinux"
+    - yay_check.rc == 0
+    - arch_aur_packages | length > 0
+
 - name: Update apt cache
   become: true
   ansible.builtin.apt:

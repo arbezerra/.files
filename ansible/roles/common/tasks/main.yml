@@ -76,3 +76,8 @@
   ansible.builtin.shell:
     cmd: curl -sSL https://install.python-poetry.org | python3 -
     creates: "{{ dotfiles_home }}/.local/bin/poetry"
+
+- name: Install uv
+  ansible.builtin.shell:
+    cmd: curl -LsSf https://astral.sh/uv/install.sh | sh
+    creates: "{{ dotfiles_home }}/.local/bin/uv"

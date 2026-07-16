@@ -1,5 +1,6 @@
-# Start ssh-agent and load the Git signing key before p10k instant prompt.
+# Start ssh-agent and load SSH keys before p10k instant prompt.
 export SSH_SIGNING_KEY="${SSH_SIGNING_KEY:-$HOME/.ssh/id_ed25519}"
+export SSH_RSA_KEY="${SSH_RSA_KEY:-$HOME/.ssh/id_rsa}"
 export SSH_AUTH_SOCK="${SSH_AUTH_SOCK:-${XDG_RUNTIME_DIR:-$HOME/.cache}/ssh-agent.sock}"
 
 if [[ -o interactive && -S "$SSH_AUTH_SOCK" ]]; then
@@ -13,14 +14,19 @@ if [[ -o interactive && ! -S "$SSH_AUTH_SOCK" ]]; then
   ssh-agent -a "$SSH_AUTH_SOCK" >/dev/null
 fi
 
-if [[ -o interactive && -f "$SSH_SIGNING_KEY" && -t 0 ]]; then
-  if [[ -r "$SSH_SIGNING_KEY.pub" ]]; then
-    if ! ssh-add -L 2>/dev/null | grep -qxF "$(cat "$SSH_SIGNING_KEY.pub")"; then
-      ssh-add "$SSH_SIGNING_KEY"
+if [[ -o interactive && -t 0 ]]; then
+  for ssh_key in "$SSH_SIGNING_KEY" "$SSH_RSA_KEY"; do
+    if [[ -f "$ssh_key" ]]; then
+      if [[ -r "$ssh_key.pub" ]]; then
+        if ! ssh-add -L 2>/dev/null | grep -qxF "$(cat "$ssh_key.pub")"; then
+          ssh-add "$ssh_key"
+        fi
+      elif ! ssh-add -l >/dev/null 2>&1; then
+        ssh-add "$ssh_key"
+      fi
     fi
-  elif ! ssh-add -l >/dev/null 2>&1; then
-    ssh-add "$SSH_SIGNING_KEY"
-  fi
+  done
+  unset ssh_key
 fi
 
 # Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.zshrc.

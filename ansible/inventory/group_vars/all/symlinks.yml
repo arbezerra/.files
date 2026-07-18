@@ -1,8 +1,8 @@
 ---
 dotfile_links:
-  - src: bin/.local/bin/tmux-sessionizer
+  - src: bin/tmux-sessionizer
     dest: .local/bin/tmux-sessionizer
-  - src: nvim/.config/nvim
+  - src: nvim
     dest: .config/nvim
   - src: tmux/.tmux.conf
     dest: .tmux.conf
@@ -16,11 +16,11 @@ dotfile_links:
     dest: .gitpaneas
   - src: git/.gitpdtec
     dest: .gitpdtec
-  - src: fonts/.fonts
+  - src: fonts
     dest: .fonts
-  - src: alacritty/.config/alacritty
+  - src: alacritty
     dest: .config/alacritty
-  - src: kitty/.config/kitty
+  - src: kitty
     dest: .config/kitty
-  - src: mpv/.config/mpv
+  - src: mpv
     dest: .config/mpv

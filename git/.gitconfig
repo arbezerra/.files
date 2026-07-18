@@ -1,5 +1,7 @@
 [init]
   defaultBranch = main
+[core]
+  editor = vim
 [gpg]
   format = ssh
 [user]

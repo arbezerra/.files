@@ -17,7 +17,7 @@ dotfile_links:
   - src: git/.gitpdtec
     dest: .gitpdtec
   - src: fonts
-    dest: .fonts
+    dest: .local/share/fonts
   - src: alacritty
     dest: .config/alacritty
   - src: kitty

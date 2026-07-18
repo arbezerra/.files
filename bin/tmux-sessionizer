@@ -3,23 +3,30 @@
 if [[ $# -eq 1 ]]; then
     selected=$1
 else
-    selected=$(find ~/workspace -mindepth 2 -maxdepth 2 -type d | fzf)
+    selected=$(find "$HOME/workspace" -mindepth 2 -maxdepth 2 -type d | fzf)
 fi
 
 if [[ -z $selected ]]; then
     exit 0
 fi
 
-selected_name=$(basename "$selected" | tr . _)
-tmux_running=$(pgrep tmux)
+if [[ ! -d "$selected" ]]; then
+    print -u2 -- "Not a directory: $selected"
+    exit 1
+fi
 
-if [[ -z $TMUX ]] && [[ -z $tmux_running ]]; then
-    tmux new-session -s $selected_name -c $selected
+selected=${selected:A}
+selected_hash=$(print -rn -- "$selected" | cksum | awk '{print $1}')
+selected_base=${selected:t}
+selected_name="${selected_base//[^[:alnum:]_-]/_}_${selected_hash}"
+
+if [[ -z $TMUX ]] && ! tmux list-sessions >/dev/null 2>&1; then
+    tmux new-session -s "$selected_name" -c "$selected"
     exit 0
 fi
 
-if ! tmux has-session -t=$selected_name 2> /dev/null; then
-    tmux new-session -ds $selected_name -c $selected
+if ! tmux has-session -t="$selected_name" 2> /dev/null; then
+    tmux new-session -d -s "$selected_name" -c "$selected"
 fi
 
 if [[ -z $TMUX ]]; then

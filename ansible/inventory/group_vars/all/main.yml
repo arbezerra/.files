@@ -77,6 +77,8 @@ debian_docker_packages:
   - iptables
   - nftables
 
+docker_apt_distribution: "{{ 'ubuntu' if ansible_facts.distribution == 'Ubuntu' else 'debian' }}"
+
 docker_kernel_modules:
   - bridge
   - overlay

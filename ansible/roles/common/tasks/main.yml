@@ -1,10 +1,9 @@
 ---
 - name: Install Arch packages
   become: true
-  ansible.builtin.command:
-    cmd: pacman -S --needed --noconfirm {{ arch_packages | join(' ') }}
-  register: arch_package_install
-  changed_when: "'there is nothing to do' not in arch_package_install.stdout"
+  ansible.builtin.package:
+    name: "{{ arch_packages }}"
+    state: present
   when: ansible_facts.os_family == "Archlinux"
 
 - name: Check whether yay is installed

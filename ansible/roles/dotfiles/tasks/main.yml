@@ -1,16 +1,23 @@
 ---
-- name: Check current zshrc
+- name: Inspect existing dotfile destinations
   ansible.builtin.stat:
-    path: "{{ dotfiles_home }}/.zshrc"
-  register: zshrc_stat
+    path: "{{ dotfiles_home }}/{{ item.dest }}"
+    follow: false
+  loop: "{{ dotfile_links }}"
+  register: dotfile_destinations
 
-- name: Backup existing zshrc
+- name: Backup conflicting dotfile destinations
   ansible.builtin.command:
-    cmd: mv "{{ dotfiles_home }}/.zshrc" "{{ dotfiles_home }}/.zshrc.bak"
-    creates: "{{ dotfiles_home }}/.zshrc.bak"
+    argv:
+      - mv
+      - "{{ dotfiles_home }}/{{ item.item.dest }}"
+      - "{{ dotfiles_home }}/{{ item.item.dest }}.bak-{{ ansible_date_time.epoch }}"
   when:
-    - zshrc_stat.stat.exists
-    - not zshrc_stat.stat.islnk
+    - item.stat.exists
+    - not item.stat.islnk or item.stat.lnk_source != dotfiles_dir ~ '/' ~ item.item.src
+  loop: "{{ dotfile_destinations.results }}"
+  loop_control:
+    label: "{{ item.item.dest }}"
 
 - name: Sync git submodule URLs
   ansible.builtin.command:

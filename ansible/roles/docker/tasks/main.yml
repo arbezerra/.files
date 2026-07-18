@@ -1,16 +1,9 @@
 ---
-- name: Check whether Docker is installed
-  ansible.builtin.command: docker --version
-  register: docker_version
-  changed_when: false
-  failed_when: false
-
 - name: Install Arch Docker packages
   become: true
-  ansible.builtin.command:
-    cmd: pacman -S --needed --noconfirm {{ arch_docker_packages | join(' ') }}
-  register: arch_docker_install
-  changed_when: "'there is nothing to do' not in arch_docker_install.stdout"
+  ansible.builtin.package:
+    name: "{{ arch_docker_packages }}"
+    state: present
   when: ansible_facts.os_family == "Archlinux"
 
 - name: Create apt keyring directory
@@ -25,7 +18,7 @@
 - name: Download Docker apt key
   become: true
   ansible.builtin.get_url:
-    url: https://download.docker.com/linux/ubuntu/gpg
+    url: "https://download.docker.com/linux/{{ docker_apt_distribution }}/gpg"
     dest: /etc/apt/keyrings/docker.asc
     mode: "0644"
   when:
@@ -38,7 +31,7 @@
     mode: "0644"
     content: |
       Types: deb
-      URIs: https://download.docker.com/linux/ubuntu
+      URIs: https://download.docker.com/linux/{{ docker_apt_distribution }}
       Suites: {{ ansible_facts.distribution_release }}
       Components: stable
       Signed-By: /etc/apt/keyrings/docker.asc
